@@ -51,19 +51,6 @@ class Ticket {
 
 class ParkingLot {
 public:
-    ParkingLot() {
-        // Initialize the parking lot with n spaces
-        this->num_occupied = 0;
-        unoccupiedSpaces.resize(VEHICLE_TYPES); // Initialize the vector with 3 elements (for each car type)
-        for (int i = 0; i < VEHICLE_TYPES; i++) {
-            unoccupiedSpaces[i] = std::priority_queue<int, std::vector<int>, std::greater<int>>();
-        }
-        for (int i = 0; i < VEHICLE_TYPES; i++) {   
-            for (int j = 0; j < MAX_PARKING_SPACES; j++) {
-                unoccupiedSpaces[i].push((i * MAX_PARKING_SPACES) + j);
-            }
-        }
-    }
 
     static ParkingLot& GetInstance() {
         static ParkingLot instance;
@@ -130,6 +117,19 @@ public:
     }
 
     private:
+        ParkingLot() {
+            // Initialize the parking lot with n spaces
+            num_occupied = 0;
+            unoccupiedSpaces.resize(VEHICLE_TYPES); // Initialize the vector with 3 elements (for each car type)
+            for (int i = 0; i < VEHICLE_TYPES; i++) {
+                unoccupiedSpaces[i] = std::priority_queue<int, std::vector<int>, std::greater<int>>();
+            }
+            for (int i = 0; i < VEHICLE_TYPES; i++) {   
+                for (int j = 0; j < MAX_PARKING_SPACES; j++) {
+                    unoccupiedSpaces[i].push((i * MAX_PARKING_SPACES) + j);
+                }
+            }
+        }
         std::vector<std::priority_queue<int, std::vector<int>, std::greater<int>>> unoccupiedSpaces; 
         /**
          * unoccupiedSpaces[index] refers to the heap of unoccupied spaces that accomodates cars of a specific type.
@@ -140,6 +140,8 @@ public:
          * Instead of Car class we can use Car std::hash(license plate) as the key, with type as key.
          */
         int num_occupied; // Number of occupied parking spaces
+        ParkingLot(const ParkingLot&) = delete;
+        ParkingLot& operator=(const ParkingLot&) = delete;
 };
 
 int main() {
